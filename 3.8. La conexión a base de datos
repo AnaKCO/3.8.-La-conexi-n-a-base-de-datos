@@ -1,0 +1,247 @@
+          using UnityEngine;
+    using UnityEngine.UIElements; 
+
+    public class GestorUI : MonoBehaviour
+    {
+        private VisualElement root;
+
+        void OnEnable()
+        {
+           
+            var uiDocument = GetComponent<UIDocument>();
+            if (uiDocument != null)
+            {
+                root = uiDocument.rootVisualElement;
+
+             
+                var miBoton = root.Q<Button>("presiona"); 
+                {
+                    miBoton.clicked += () => AccionBoton();
+                }
+            }
+        }
+
+        void AccionBoton()
+        {
+            Debug.Log("¡El botón fue presionado!");
+
+        }
+    }
+	
+	        using UnityEngine;
+
+        public class PlayerMovement : MonoBehaviour
+        {
+            public float moveSpeed = 5f; 
+            private Rigidbody2D rb; 
+
+            void Start()
+            {
+                rb = GetComponent<Rigidbody2D>(); 
+            }
+
+            void FixedUpdate()
+            {
+                float moveInput = Input.GetAxisRaw("Horizontal"); 
+                rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y); 
+            }
+        }
+		
+  public GameObject miPrefab;
+      Instantiate(miPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+	  using UnityEngine;
+
+public class InstanciarPrefab : MonoBehaviour
+{
+    public GameObject prefabObjeto; 
+
+    void Start()
+    {
+      
+        Instantiate(prefabObjeto, transform.position, Quaternion.identity);
+    }
+}
+    public Rigidbody myRigidbody; 
+    void Start()
+    {
+        myRigidbody = GetComponent<Rigidbody>(); 
+    }
+	   
+    myRigidbody.AddForce(Vector3.up * 10f, ForceMode.Impulse);
+
+    myRigidbody.AddTorque(Vector3.forward * 5f, ForceMode.Impulse);
+	
+	    myRigidbody.mass = 2.0f; 
+    myRigidbody.useGravity = false;
+	using UnityEngine;
+
+public class MovimientoObjeto : MonoBehaviour
+{
+    public float fuerzaEmpuje = 10f;
+    private Rigidbody rb;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    void FixedUpdate() 
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            rb.AddForce(Vector3.up * fuerzaEmpuje, ForceMode.Impulse);
+        }
+    }
+}
+
+    public Camera miCámara;
+	  
+    miCámara.transform.position = new Vector3(10, 5, -10);
+  
+    miCámara.transform.rotation = Quaternion.Euler(30, 0, 0);
+	
+    miCámara.rect = new Rect(0.0f, 0.0f, 0.25f, 0.25f);
+	    
+    miCámara.depth = 0;
+  
+    otraCámara.depth = 1;
+	
+	    public Camera camaraPrincipal;
+    public Camera camaraVistaAerea;
+
+    void CambiarVista()
+    {
+        camaraPrincipal.enabled = !camaraPrincipal.enabled;
+        camaraVistaAerea.enabled = !camaraVistaAerea.enabled;
+    }
+	
+	using UnityEngine;
+
+public class PlayerMovement : MonoBehaviour
+{
+    public Rigidbody2D rb2d; 
+    public float moveSpeed = 5f; 
+
+    void Start()
+    {
+
+        rb2d = GetComponent<Rigidbody2D>();
+    }
+
+    void FixedUpdate()
+    {
+
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+
+        Vector2 moveDirection = new Vector2(horizontalInput, 0f);
+
+        rb2d.velocity = moveDirection.normalized * moveSpeed;
+    }
+}
+	using UnityEngine;
+
+    public class Bala : MonoBehaviour
+    {
+        public float velocidad = 10f; 
+        private Rigidbody2D rb;
+
+        void Start()
+        {
+            rb = GetComponent<Rigidbody2D>(); 
+            rb.velocity = transform.right * velocidad;
+        }
+
+        void Update()
+        {
+          
+        }
+
+        void OnCollisionEnter2D(Collision2D collision)
+        {
+     
+            Destroy(gameObject); 
+        }
+    }
+	    using UnityEngine;
+
+    public class Jugador : MonoBehaviour
+    {
+        public GameObject prefabBala; 
+        public Transform puntoDisparo; 
+
+        void Update()
+        {
+            if (Input.GetButtonDown("Fire1"))
+            {
+                Instantiate(prefabBala, puntoDisparo.position, puntoDisparo.rotation);
+            }
+        }
+    }
+	
+	using UnityEngine;
+
+public class MisilScript : MonoBehaviour
+{
+    public float velocidad = 10f; 
+    private Rigidbody2D rb2d;
+
+    void Awake()
+    {
+        rb2d = GetComponent<Rigidbody2D>();
+    }
+
+    void FixedUpdate()
+    {
+    
+        rb2d.velocity = transform.right * velocidad;
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        Destroy(gameObject); 
+    }
+}
+    using UnityEngine;
+    using Unity.Services.Core;
+    using Unity.Services.Economy;
+    using Unity.Services.Economy.PlayerBalances;
+
+    public class PlayerDataSaver : MonoBehaviour
+    {
+        async void Start()
+        {
+            await UnityServices.InitializeAsync();
+            // ...
+        }
+
+        public async void SaveCoins(int amount)
+        {
+            try
+            {
+                await Economy.PlayerBalances.AddPlayerBalanceAsync("Monedas", amount); 
+                Debug.Log("Monedas guardadas exitosamente.");
+            }
+            catch (EconomyException e)
+            {
+                Debug.LogError($"Error al guardar monedas: {e.Message}");
+            }
+        }
+    }
+	
+	    public async void LoadCoins()
+    {
+        try
+        {
+            var balances = await Economy.PlayerBalances.GetPlayerBalancesAsync();
+            var monedasBalance = balances.Get(Unity.Services.Economy.Currency.Get("Monedas"));
+          
+            Debug.Log($"Monedas actuales: {monedasBalance.Balance}");
+        }
+        catch (EconomyException e)
+        {
+            Debug.LogError($"Error al cargar monedas: {e.Message}");
+        }
+    }
+	    PlayerPrefs.SetInt("TotalMonedas", cantidadActualMonedas);
+    PlayerPrefs.Save(); 
+	    int totalMonedas = PlayerPrefs.GetInt("TotalMonedas", 0); 
